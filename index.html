@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Form</title>
+</head>
+<body>
+
+    <h2>Contact Form</h2>
+
+    <form id="emailForm">
+        <label for="email">Email:</label>
+        <input type="email" id="email" required>
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" required>
+
+        <label for="telephone">Telephone:</label>
+        <input type="text" id="telephone" required>
+
+        <label for="contact">Contact:</label>
+        <input type="text" id="contact" required>
+
+        <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+
+    <script>
+        function submitForm() {
+            // Get form values
+            var email = document.getElementById('email').value;
+            var name = document.getElementById('name').value;
+            var telephone = document.getElementById('telephone').value;
+            var contact = document.getElementById('contact').value;
+
+            // Simple client-side validation
+            if (!email || !name || !telephone || !contact) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            // Prepare data to be sent
+            var formData = {
+                email: email,
+                name: name,
+                telephone: telephone,
+                contact: contact
+            };
+
+            // Make API request to Laravel backend
+            fetch('http://localhost:8000/api/mail/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                // Optionally, you can reset the form after successful submission
+                document.getElementById('emailForm').reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        }
+    </script>
+
+</body>
+</html>
